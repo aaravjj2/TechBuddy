@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
+import { Footer } from "@/components/Footer";
 import { MobileNav } from "@/components/MobileNav";
 import "./globals.css";
 
@@ -50,6 +51,7 @@ export default function RootLayout({
           />
         ) : null}
         {children}
+        <Footer />
         <MobileNav />
       </body>
     </html>
