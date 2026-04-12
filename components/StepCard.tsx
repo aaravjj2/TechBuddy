@@ -13,6 +13,7 @@ export type StepCardProps = {
   onNext: () => void;
   canGoPrevious: boolean;
   canGoNext: boolean;
+  isLastStep?: boolean;
 };
 
 function ImageFallback({ alt }: { alt: string }) {
@@ -60,6 +61,7 @@ export function StepCard({
   onNext,
   canGoPrevious,
   canGoNext,
+  isLastStep = false,
 }: StepCardProps) {
   const progress = Math.round((currentStep / totalSteps) * 100);
   const [imageError, setImageError] = useState(false);
@@ -115,10 +117,10 @@ export function StepCard({
           <button
             type="button"
             onClick={onNext}
-            disabled={!canGoNext}
-            className="inline-flex min-h-[56px] min-w-[140px] items-center justify-center rounded-xl bg-accent px-5 py-3 font-sans text-body text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!canGoNext && !isLastStep}
+            className="inline-flex min-h-[56px] min-w-[140px] items-center justify-center rounded-xl bg-accent px-5 py-3 font-sans text-body font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Next Step →
+            {isLastStep ? "Done" : "Next Step →"}
           </button>
         </div>
       </div>
