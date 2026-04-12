@@ -18,9 +18,18 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
-  title: "TechBuddy — Your technology helper",
+  title: {
+    default: "TechBuddy — Your technology helper",
+    template: "%s | TechBuddy",
+  },
   description:
-    "A patient, always-available technology helper for senior citizens.",
+    "A free, patient technology helper for senior citizens. Learn to spot scams, understand AI, and use your phone with confidence.",
+  openGraph: {
+    title: "TechBuddy — Your technology helper",
+    description:
+      "A free, patient technology helper for senior citizens. Learn to spot scams, understand AI, and use your phone with confidence.",
+    type: "website",
+  },
 };
 
 const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;

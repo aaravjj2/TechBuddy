@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { NavButton } from "@/components/NavButton";
 import { PageShell } from "@/components/PageShell";
+
+export const metadata: Metadata = {
+  description:
+    "Learn to spot scams, understand AI, and use your phone with confidence. Free forever, no login required.",
+};
 
 export default function Home() {
   return (
