@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   },
   description:
     "A free, patient technology helper for senior citizens. Learn to spot scams, understand AI, and use your phone with confidence.",
+  manifest: "/manifest.json",
   openGraph: {
     title: "TechBuddy — Your technology helper",
     description:
