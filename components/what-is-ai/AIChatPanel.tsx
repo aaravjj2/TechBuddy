@@ -14,6 +14,27 @@ const STARTERS = [
   "Will AI take over the world?",
 ];
 
+const FOLLOW_UPS = [
+  "Can AI read my emails?",
+  "How do I know if I'm talking to AI?",
+  "Is Siri the same as ChatGPT?",
+  "Should I trust health advice from AI?",
+  "Can AI steal my identity?",
+  "Why does AI sometimes say wrong things?",
+  "How do companies use my data for AI?",
+  "Is it safe to put personal info into AI?",
+  "Can AI help me with my phone?",
+  "What does 'machine learning' mean in simple terms?",
+  "Should I be worried about deepfakes?",
+  "Can AI write emails for me?",
+  "How do I turn off AI features I don't want?",
+  "Is AI watching me through my camera?",
+  "What's the difference between AI and a regular app?",
+  "Can AI make phone calls for me?",
+  "How do I know if a photo is real or AI-made?",
+  "Is it okay to use AI for medical questions?",
+];
+
 const MAX_USER_TURNS = 20;
 
 function parseSseChunks(buffer: string): { events: string[]; rest: string } {
@@ -38,6 +59,7 @@ export function AIChatPanel() {
   const [streaming, setStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [limitReached, setLimitReached] = useState(false);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const abortRef = useRef<AbortController | null>(null);
   const lastAttemptRef = useRef("");
 
@@ -60,6 +82,12 @@ export function AIChatPanel() {
     setError(null);
     setLimitReached(false);
     setStreaming(false);
+    setSuggestions([]);
+  }, []);
+
+  const pickSuggestions = useCallback(() => {
+    const shuffled = [...FOLLOW_UPS].sort(() => Math.random() - 0.5);
+    setSuggestions(shuffled.slice(0, 3));
   }, []);
 
   const sendInternal = useCallback(
@@ -74,6 +102,7 @@ export function AIChatPanel() {
       lastAttemptRef.current = trimmed;
       setError(null);
       setStreaming(true);
+      setSuggestions([]);
 
       const previousMessages = messages;
       const nextMessages: ChatMessage[] = [
@@ -196,6 +225,9 @@ export function AIChatPanel() {
       } finally {
         setStreaming(false);
         abortRef.current = null;
+        if (!controller.signal.aborted) {
+          pickSuggestions();
+        }
       }
     },
     [messages, streaming, userTurnCount],
@@ -242,6 +274,26 @@ export function AIChatPanel() {
             You&apos;ve reached the conversation limit for this session. Tap
             Start over to begin a fresh chat.
           </p>
+        ) : null}
+
+        {suggestions.length > 0 && !streaming && !limitReached ? (
+          <div className="space-y-2 border-t border-border pt-4">
+            <p className="text-body text-text-secondary">
+              You might also wonder:
+            </p>
+            <div className="flex flex-col gap-2">
+              {suggestions.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => void sendInternal(q)}
+                  className="min-h-[56px] rounded-xl border border-border bg-surface px-4 py-3 text-left text-body text-text-primary hover:bg-surface-hover"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
         ) : null}
 
         {error ? (
