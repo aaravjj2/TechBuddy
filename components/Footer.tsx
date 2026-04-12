@@ -1,3 +1,4 @@
+import { FontSizeControls } from "@/components/FontSizeControls";
 import { HighContrastToggle } from "@/components/HighContrastToggle";
 
 const RESOURCES = [
@@ -50,8 +51,9 @@ export function Footer() {
             </li>
           ))}
         </ul>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-3">
           <HighContrastToggle />
+          <FontSizeControls />
         </div>
         <p className="mt-8 text-sm text-text-secondary">
           TechBuddy is a free educational tool — not a replacement for official
