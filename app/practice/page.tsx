@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { PracticeScenarioList } from "@/components/practice/PracticeScenarioList";
+
+export const metadata: Metadata = {
+  title: "Practice Mode",
+  description:
+    "Practice responding to simulated scam scenarios in a safe environment. Get feedback and build confidence.",
+};
 
 export default function PracticePage() {
   return (

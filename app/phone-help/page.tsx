@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { PHONE_HELP_TOPICS } from "@/lib/phone-help";
+
+export const metadata: Metadata = {
+  title: "Help With My Phone",
+  description:
+    "Step-by-step guides for common phone tasks — WiFi, screenshots, charging, and more. Take your time.",
+};
 
 export default function PhoneHelpPage() {
   return (

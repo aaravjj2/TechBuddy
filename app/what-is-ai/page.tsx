@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 import { AIChatPanel } from "@/components/what-is-ai/AIChatPanel";
+
+export const metadata: Metadata = {
+  title: "What Is AI?",
+  description:
+    "Ask questions about artificial intelligence in plain language. No jargon, no judgement — just clear answers.",
+};
 
 export default function WhatIsAIPage() {
   return (
