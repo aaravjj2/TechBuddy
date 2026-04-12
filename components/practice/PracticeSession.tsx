@@ -253,6 +253,12 @@ export function PracticeSession({ scenario }: { scenario: PracticeScenario }) {
             id="practice-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                void sendUser(input);
+              }
+            }}
             placeholder="Type what you would say on the phone..."
             rows={3}
             disabled={loading}
