@@ -21,7 +21,7 @@ export function PageShell({ children, className = "" }: PageShellProps) {
     <main
       id="main-content"
       tabIndex={-1}
-      className={`mx-auto min-h-screen w-full max-w-content px-4 py-8 outline-none md:px-6 ${className}`}
+      className={`mx-auto min-h-screen w-full max-w-content px-4 py-8 pb-24 outline-none sm:pb-8 md:px-6 ${className}`}
     >
       <Suspense fallback={<HeaderFallback />}>
         <SiteHeader />
