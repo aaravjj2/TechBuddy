@@ -1,3 +1,5 @@
+import { HighContrastToggle } from "@/components/HighContrastToggle";
+
 const RESOURCES = [
   {
     name: "FTC Fraud Report",
@@ -48,6 +50,9 @@ export function Footer() {
             </li>
           ))}
         </ul>
+        <div className="mt-6">
+          <HighContrastToggle />
+        </div>
         <p className="mt-8 text-sm text-text-secondary">
           TechBuddy is a free educational tool — not a replacement for official
           help. When in doubt, always call a trusted family member or your local
