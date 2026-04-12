@@ -14,7 +14,7 @@ export function PhoneWalkthrough({ topic }: { topic: PhoneHelpTopic }) {
     return (
       <div className="space-y-6">
         <div className="rounded-2xl border-2 border-success bg-surface p-8 text-center shadow-sm">
-          <span className="text-5xl" aria-hidden>
+          <span className="text-5xl animate-celebrate" aria-hidden>
             ✅
           </span>
           <h1 className="mt-4 font-display text-[36px] text-text-primary">

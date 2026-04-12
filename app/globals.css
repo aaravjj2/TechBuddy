@@ -67,3 +67,21 @@
     }
   }
 }
+
+@keyframes celebrate {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-celebrate {
+  animation: celebrate 0.6s ease-out both;
+}
