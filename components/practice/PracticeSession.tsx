@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { ChatBubble } from "@/components/ChatBubble";
+import { ReadAloud } from "@/components/ReadAloud";
 import { Spinner } from "@/components/Spinner";
 import { markScenarioCompleted } from "@/lib/practice-storage";
 import type { PracticeScenario } from "@/lib/scenarios";
@@ -200,7 +201,8 @@ export function PracticeSession({ scenario }: { scenario: PracticeScenario }) {
             {debriefText}
           </div>
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <ReadAloud text={debriefText} label="Read this to me" />
           <Link
             href="/practice"
             className="inline-flex min-h-[56px] items-center justify-center rounded-xl border border-border bg-surface px-6 text-body text-text-primary hover:bg-surface-hover"
