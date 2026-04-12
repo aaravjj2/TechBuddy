@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ContinueCard } from "@/components/ContinueCard";
 import { NavButton } from "@/components/NavButton";
 import { PageShell } from "@/components/PageShell";
 
@@ -40,6 +41,10 @@ export default function Home() {
           </span>
         </div>
       </header>
+
+      <div className="mb-6">
+        <ContinueCard />
+      </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <NavButton

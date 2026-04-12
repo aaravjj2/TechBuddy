@@ -3,6 +3,7 @@ import { Lora, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 import { Footer } from "@/components/Footer";
 import { MobileNav } from "@/components/MobileNav";
+import { RouteTracker } from "@/components/RouteTracker";
 import "./globals.css";
 
 const lora = Lora({
@@ -61,6 +62,7 @@ export default function RootLayout({
           />
         ) : null}
         {children}
+        <RouteTracker />
         <Footer />
         <MobileNav />
       </body>
