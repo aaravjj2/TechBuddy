@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ReadAloud } from "@/components/ReadAloud";
 import { ScamVerdict } from "@/components/ScamVerdict";
@@ -65,6 +65,7 @@ export function ScamCheckerForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ScamCheckResult | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   const speechText = useMemo(
     () => (result ? verdictToSpeech(result) : ""),
@@ -77,40 +78,48 @@ export function ScamCheckerForm() {
     setError(null);
   }, []);
 
-  const submit = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const res = await fetch("/api/scam-check", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
-      });
-      const data: unknown = await res.json();
-      if (!res.ok) {
+  const submit = useCallback(
+    async (text?: string) => {
+      const payload = (text ?? message).trim();
+      if (!payload) return;
+      setLoading(true);
+      setError(null);
+      setResult(null);
+      if (text) setMessage(text);
+      try {
+        const res = await fetch("/api/scam-check", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: payload }),
+        });
+        const data: unknown = await res.json();
+        if (!res.ok) {
+          setError(
+            typeof data === "object" && data && "error" in data
+              ? String((data as { error?: string }).error)
+              : "We could not check this message right now. Check your Wi‑Fi and tap Try again.",
+          );
+          return;
+        }
+        if (!isScamResult(data)) {
+          setError(
+            "We got a confusing answer from the checker. Tap Try again in a moment.",
+          );
+          return;
+        }
+        setResult(data);
+        // Scroll to the result after a short delay to allow React to render
+        setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+      } catch {
         setError(
-          typeof data === "object" && data && "error" in data
-            ? String((data as { error?: string }).error)
-            : "We could not check this message right now. Check your Wi‑Fi and tap Try again.",
+          "Something went wrong on our side. Check your connection and tap Try again.",
         );
-        return;
+      } finally {
+        setLoading(false);
       }
-      if (!isScamResult(data)) {
-        setError(
-          "We got a confusing answer from the checker. Tap Try again in a moment.",
-        );
-        return;
-      }
-      setResult(data);
-    } catch {
-      setError(
-        "Something went wrong on our side. Check your connection and tap Try again.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [message]);
+    },
+    [message],
+  );
 
   return (
     <div className="space-y-8">
@@ -129,7 +138,7 @@ export function ScamCheckerForm() {
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <button
             type="button"
-            onClick={submit}
+            onClick={() => void submit()}
             disabled={loading || !message.trim()}
             className="flex h-[60px] min-w-[200px] flex-1 items-center justify-center rounded-xl bg-accent text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
@@ -157,7 +166,7 @@ export function ScamCheckerForm() {
       </div>
 
       {result ? (
-        <div className="space-y-4">
+        <div className="space-y-4" ref={resultRef}>
           {result.action_steps && result.action_steps.length > 0 ? (
             <div
               className="rounded-2xl border-2 border-accent bg-surface p-6 shadow-sm"
@@ -192,22 +201,25 @@ export function ScamCheckerForm() {
           Common scam examples
         </h2>
         <p className="mt-2 text-body text-text-secondary">
-          Tap an example to read how these scams often sound.
+          Tap an example to check it right away — no typing needed.
         </p>
         <div className="mt-4 space-y-3">
           {EXAMPLES.map((ex) => (
-            <details
+            <div
               key={ex.title}
-              className="group rounded-xl border border-border bg-bg px-4 py-2"
+              className="rounded-2xl border border-border bg-surface p-6 shadow-sm"
             >
-              <summary className="cursor-pointer list-none py-3 font-display text-[20px] text-text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent [&::-webkit-details-marker]:hidden">
-                <span className="flex items-center justify-between gap-2">
-                  {ex.title}
-                  <span className="text-text-secondary group-open:rotate-180">▼</span>
-                </span>
-              </summary>
-              <p className="pb-4 text-body text-text-primary">{ex.body}</p>
-            </details>
+              <p className="font-display text-[20px] text-text-primary">{ex.title}</p>
+              <p className="mt-2 text-body text-text-primary">{ex.body}</p>
+              <button
+                type="button"
+                onClick={() => void submit(ex.body)}
+                disabled={loading}
+                className="mt-4 inline-flex min-h-[56px] items-center justify-center rounded-xl bg-accent px-6 text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Check this example
+              </button>
+            </div>
           ))}
         </div>
       </section>
