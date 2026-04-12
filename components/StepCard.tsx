@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { ReadAloud } from "@/components/ReadAloud";
 
 export type StepCardProps = {
@@ -14,6 +15,41 @@ export type StepCardProps = {
   canGoNext: boolean;
 };
 
+function ImageFallback({ alt }: { alt: string }) {
+  return (
+    <div
+      className="flex min-h-[200px] flex-col items-center justify-center gap-3 bg-bg px-4 py-8 text-center"
+      role="img"
+      aria-label={alt}
+    >
+      <svg
+        width="64"
+        height="64"
+        viewBox="0 0 64 64"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden
+      >
+        <rect
+          x="18"
+          y="4"
+          width="28"
+          height="56"
+          rx="4"
+          stroke="currentColor"
+          strokeWidth="2"
+          className="text-text-secondary"
+        />
+        <circle cx="32" cy="52" r="3" className="fill-text-secondary" />
+        <rect x="22" y="12" width="20" height="32" rx="1" className="fill-border" />
+      </svg>
+      <p className="text-body text-text-secondary">
+        Follow the steps below
+      </p>
+    </div>
+  );
+}
+
 export function StepCard({
   currentStep,
   totalSteps,
@@ -26,6 +62,11 @@ export function StepCard({
   canGoNext,
 }: StepCardProps) {
   const progress = Math.round((currentStep / totalSteps) * 100);
+  const [imageError, setImageError] = useState(false);
+
+  const handleRetry = useCallback(() => {
+    setImageError(false);
+  }, []);
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-8 shadow-sm">
@@ -46,12 +87,18 @@ export function StepCard({
         Step {currentStep} of {totalSteps}
       </p>
       <div className="relative mb-6 w-full overflow-hidden rounded-xl border border-border bg-bg">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className="mx-auto max-h-[min(50vh,360px)] w-auto max-w-full object-contain"
-        />
+        {imageError ? (
+          <ImageFallback alt={imageAlt} />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className="mx-auto max-h-[min(50vh,360px)] w-auto max-w-full object-contain"
+            onError={() => setImageError(true)}
+            onLoad={handleRetry}
+          />
+        )}
       </div>
       <p className="mb-8 text-body text-text-primary">{instruction}</p>
       <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
