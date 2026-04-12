@@ -85,3 +85,23 @@
 .animate-celebrate {
   animation: celebrate 0.6s ease-out both;
 }
+
+/* High contrast mode overrides */
+html.high-contrast {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #000000;
+  --color-text-primary: #000000;
+  --color-text-secondary: #333333;
+  --color-accent: #0050a0;
+  --color-accent-hover: #003d7a;
+  --color-surface-hover: #f0f0f0;
+}
+
+html.high-contrast body {
+  font-weight: 500;
+}
+
+html.high-contrast *:focus-visible {
+  outline-width: 4px;
+}
