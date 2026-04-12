@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import { ChatBubble } from "@/components/ChatBubble";
+import { Spinner } from "@/components/Spinner";
 import { ReadAloud } from "@/components/ReadAloud";
 import type { ChatMessage } from "@/lib/types";
 
@@ -284,7 +285,14 @@ export function AIChatPanel() {
           disabled={streaming || !input.trim() || limitReached}
           className="inline-flex min-h-[56px] min-w-[120px] items-center justify-center rounded-xl bg-accent px-6 text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {streaming ? "Sending…" : "Send"}
+          {streaming ? (
+            <>
+              <Spinner label="Sending message" />
+              <span className="ml-2">Sending…</span>
+            </>
+          ) : (
+            "Send"
+          )}
         </button>
       </div>
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { ChatBubble } from "@/components/ChatBubble";
+import { Spinner } from "@/components/Spinner";
 import { markScenarioCompleted } from "@/lib/practice-storage";
 import type { PracticeScenario } from "@/lib/scenarios";
 import type { ChatMessage } from "@/lib/types";
@@ -151,7 +152,14 @@ export function PracticeSession({ scenario }: { scenario: PracticeScenario }) {
           disabled={loading}
           className="inline-flex min-h-[56px] w-full items-center justify-center rounded-xl bg-accent px-6 text-lg font-semibold text-white hover:bg-accent-hover disabled:opacity-50 sm:w-auto"
         >
-          {loading ? "Starting…" : "Start practice"}
+          {loading ? (
+            <>
+              <Spinner label="Starting practice" />
+              <span className="ml-2">Starting…</span>
+            </>
+          ) : (
+            "Start practice"
+          )}
         </button>
         {error ? (
           <div className="space-y-3 rounded-xl border border-danger/40 bg-surface p-4">
@@ -255,7 +263,14 @@ export function PracticeSession({ scenario }: { scenario: PracticeScenario }) {
           disabled={loading || !input.trim()}
           className="inline-flex min-h-[56px] min-w-[120px] items-center justify-center rounded-xl bg-accent px-6 text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading ? "Sending…" : "Send"}
+          {loading ? (
+            <>
+              <Spinner label="Sending response" />
+              <span className="ml-2">Sending…</span>
+            </>
+          ) : (
+            "Send"
+          )}
         </button>
       </div>
 
