@@ -18,6 +18,21 @@ export default function Home() {
             </p>
           </div>
         </div>
+        <p className="mt-4 max-w-lg text-body text-text-primary">
+          Learn to spot scams, understand AI, and use your phone with
+          confidence.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <span className="inline-flex items-center rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold text-text-secondary">
+            Free forever
+          </span>
+          <span className="inline-flex items-center rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold text-text-secondary">
+            No login required
+          </span>
+          <span className="inline-flex items-center rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold text-text-secondary">
+            Built for seniors
+          </span>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
