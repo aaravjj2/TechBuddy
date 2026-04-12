@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ReadAloud } from "@/components/ReadAloud";
+import { Spinner } from "@/components/Spinner";
 import { ScamVerdict } from "@/components/ScamVerdict";
 import type { ScamCheckResult } from "@/lib/types";
 
@@ -142,7 +143,14 @@ export function ScamCheckerForm() {
             disabled={loading || !message.trim()}
             className="flex h-[60px] min-w-[200px] flex-1 items-center justify-center rounded-xl bg-accent text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {loading ? "Checking…" : "Check This Message"}
+            {loading ? (
+              <>
+                <Spinner label="Checking message" />
+                <span className="ml-2">Checking…</span>
+              </>
+            ) : (
+              "Check This Message"
+            )}
           </button>
           {error ? (
             <button
