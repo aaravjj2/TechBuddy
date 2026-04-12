@@ -34,6 +34,12 @@ export default function RootLayout({
       className={`${lora.variable} ${sourceSans.variable}`}
     >
       <body className="font-sans">
+        <a
+          href="#main-content"
+          className="fixed left-2 top-2 z-50 -translate-y-20 rounded-xl bg-accent px-6 py-3 text-lg font-semibold text-white shadow-lg transition-transform focus:translate-y-0"
+        >
+          Skip to main content
+        </a>
         {plausibleDomain ? (
           <Script
             defer
