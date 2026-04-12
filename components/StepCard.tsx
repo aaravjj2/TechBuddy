@@ -14,6 +14,7 @@ export type StepCardProps = {
   canGoPrevious: boolean;
   canGoNext: boolean;
   isLastStep?: boolean;
+  onGoToStep?: (step: number) => void;
 };
 
 function ImageFallback({ alt }: { alt: string }) {
@@ -62,6 +63,7 @@ export function StepCard({
   canGoPrevious,
   canGoNext,
   isLastStep = false,
+  onGoToStep,
 }: StepCardProps) {
   const progress = Math.round((currentStep / totalSteps) * 100);
   const [imageError, setImageError] = useState(false);
@@ -73,7 +75,7 @@ export function StepCard({
   return (
     <div className="rounded-2xl border border-border bg-surface p-8 shadow-sm">
       <div
-        className="mb-6 h-3 w-full overflow-hidden rounded-full bg-border"
+        className="mb-4 h-3 w-full overflow-hidden rounded-full bg-border"
         role="progressbar"
         aria-valuemin={1}
         aria-valuemax={totalSteps}
@@ -84,6 +86,32 @@ export function StepCard({
           className="h-full rounded-full bg-accent transition-[width] duration-300"
           style={{ width: `${progress}%` }}
         />
+      </div>
+      <div className="mb-6 flex items-center justify-center gap-2" role="group" aria-label="Step navigation">
+        {Array.from({ length: totalSteps }, (_, i) => {
+          const stepNum = i + 1;
+          const isCurrent = stepNum === currentStep;
+          const isCompleted = stepNum < currentStep;
+          return (
+            <button
+              key={stepNum}
+              type="button"
+              onClick={() => onGoToStep?.(i)}
+              disabled={!onGoToStep}
+              aria-label={`Go to step ${stepNum}${isCurrent ? " (current)" : ""}${isCompleted ? " (completed)" : ""}`}
+              aria-current={isCurrent ? "step" : undefined}
+              className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                isCurrent
+                  ? "bg-accent text-white"
+                  : isCompleted
+                    ? "bg-accent/20 text-accent"
+                    : "bg-border text-text-secondary"
+              }`}
+            >
+              {stepNum}
+            </button>
+          );
+        })}
       </div>
       <p className="mb-6 font-display text-[24px] text-text-primary">
         Step {currentStep} of {totalSteps}
