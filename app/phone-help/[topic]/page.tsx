@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { PageShell } from "@/components/PageShell";
 import { PhoneWalkthrough } from "@/components/phone-help/PhoneWalkthrough";
 import { getTopicBySlug } from "@/lib/phone-help";
@@ -13,14 +13,13 @@ export default async function PhoneHelpTopicPage({ params }: Props) {
 
   return (
     <PageShell>
-      <p className="mb-4 text-body">
-        <Link
-          href="/phone-help"
-          className="text-accent underline min-h-[56px] inline-flex items-center"
-        >
-          ← All topics
-        </Link>
-      </p>
+      <Breadcrumb
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Phone Help", href: "/phone-help" },
+          { label: topic.title },
+        ]}
+      />
       <PhoneWalkthrough topic={topic} />
     </PageShell>
   );
