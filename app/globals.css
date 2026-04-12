@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #fafaf7;
+  --color-surface: #ffffff;
+  --color-border: #e8e4dc;
+  --color-text-primary: #1a1a18;
+  --color-text-secondary: #6b6860;
+  --color-accent: #2d7dd2;
+  --color-accent-hover: #1e5fa3;
+  --color-success: #2e7d4f;
+  --color-danger: #c0392b;
+  --color-warning: #e67e22;
+  --color-surface-hover: #f0ede6;
+}
+
+@layer base {
+  html {
+    @apply bg-bg text-text-primary antialiased;
+  }
+
+  body {
+    @apply font-sans text-body min-h-screen;
+    font-size: 20px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+  }
+
+  h1 {
+    @apply font-display text-[36px] leading-tight;
+  }
+
+  h2 {
+    @apply font-display text-[28px] leading-snug;
+  }
+
+  h3 {
+    @apply font-display text-[24px] leading-snug;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-[3px] ring-accent ring-offset-2 ring-offset-bg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  @media print {
+    .print\:avoid-break {
+      break-inside: avoid;
+    }
+
+    .print\:hidden {
+      display: none !important;
+    }
+  }
+}

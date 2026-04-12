@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="Illustration placeholder">
+  <rect width="800" height="450" fill="#FAFAF7" stroke="#E8E4DC" stroke-width="4" rx="16"/>
+  <circle cx="400" cy="200" r="48" fill="none" stroke="#C0392B" stroke-width="6"/>
+  <path d="M520 200 L620 120" stroke="#C0392B" stroke-width="8" stroke-linecap="round"/>
+  <polygon points="620,120 600,130 610,110" fill="#C0392B"/>
+  <text x="400" y="320" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" fill="#1A1A18">Phone screen (illustration)</text>
+</svg>
