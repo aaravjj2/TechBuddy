@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
+import { MobileNav } from "@/components/MobileNav";
 import "./globals.css";
 
 const lora = Lora({
@@ -49,6 +50,7 @@ export default function RootLayout({
           />
         ) : null}
         {children}
+        <MobileNav />
       </body>
     </html>
   );
