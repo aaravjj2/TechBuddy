@@ -60,6 +60,7 @@ export function PhoneWalkthrough({ topic }: { topic: PhoneHelpTopic }) {
         canGoPrevious={index > 0}
         canGoNext={!isLast}
         isLastStep={isLast}
+        onGoToStep={(i) => setIndex(i)}
         onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
         onNext={() => {
           if (isLast) {
