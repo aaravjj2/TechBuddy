@@ -3,14 +3,17 @@
 import { useState } from "react";
 import { ReadAloud } from "@/components/ReadAloud";
 
+import type { TipCategory } from "@/lib/tips";
+
 export type TipCardProps = {
   title: string;
   body: string;
   action?: string;
   highlighted?: boolean;
+  category?: TipCategory;
 };
 
-export function TipCard({ title, body, action, highlighted = false }: TipCardProps) {
+export function TipCard({ title, body, action, highlighted = false, category }: TipCardProps) {
   const [expanded, setExpanded] = useState(highlighted);
 
   return (
@@ -28,6 +31,11 @@ export function TipCard({ title, body, action, highlighted = false }: TipCardPro
             <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-accent">
               Today&apos;s Tip
             </p>
+          ) : null}
+          {category ? (
+            <span className="mb-1 inline-block rounded-full border border-border bg-bg px-3 py-0.5 text-xs font-semibold text-text-secondary">
+              {category}
+            </span>
           ) : null}
           <h3 className="font-display text-[22px] leading-snug text-text-primary">
             {title}
