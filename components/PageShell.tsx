@@ -19,7 +19,9 @@ function HeaderFallback() {
 export function PageShell({ children, className = "" }: PageShellProps) {
   return (
     <main
-      className={`mx-auto min-h-screen w-full max-w-content px-4 py-8 md:px-6 ${className}`}
+      id="main-content"
+      tabIndex={-1}
+      className={`mx-auto min-h-screen w-full max-w-content px-4 py-8 outline-none md:px-6 ${className}`}
     >
       <Suspense fallback={<HeaderFallback />}>
         <SiteHeader />
