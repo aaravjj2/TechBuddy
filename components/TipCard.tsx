@@ -1,26 +1,63 @@
+"use client";
+
+import { useState } from "react";
+import { ReadAloud } from "@/components/ReadAloud";
+
 export type TipCardProps = {
   title: string;
   body: string;
   action?: string;
+  highlighted?: boolean;
 };
 
-export function TipCard({ title, body, action }: TipCardProps) {
+export function TipCard({ title, body, action, highlighted = false }: TipCardProps) {
+  const [expanded, setExpanded] = useState(highlighted);
+
   return (
-    <article className="rounded-2xl border border-border bg-surface p-8 shadow-sm">
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-3xl" aria-hidden>
-          💡
+    <article
+      className={`rounded-2xl border bg-surface p-6 shadow-sm transition-colors sm:p-8 ${
+        highlighted ? "border-2 border-accent" : "border border-border"
+      }`}
+    >
+      <div className="flex items-start gap-3">
+        <span className="text-2xl" aria-hidden>
+          {highlighted ? "💡" : "📌"}
         </span>
-        <h2 className="font-display text-[28px] text-text-primary">
-          Today&apos;s Tip
-        </h2>
+        <div className="min-w-0 flex-1">
+          {highlighted ? (
+            <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-accent">
+              Today&apos;s Tip
+            </p>
+          ) : null}
+          <h3 className="font-display text-[22px] leading-snug text-text-primary">
+            {title}
+          </h3>
+        </div>
       </div>
-      <div className="h-px w-full bg-border" />
-      <h3 className="mt-6 font-display text-[24px] text-text-primary">{title}</h3>
-      <p className="mt-4 text-body text-text-primary">{body}</p>
-      {action ? (
-        <p className="mt-4 text-body font-semibold text-text-primary">{action}</p>
-      ) : null}
+
+      {highlighted || expanded ? (
+        <div className="mt-4">
+          <p className="text-body text-text-primary">{body}</p>
+          {action ? (
+            <p className="mt-3 text-body font-semibold text-text-primary">
+              {action}
+            </p>
+          ) : null}
+          {highlighted ? (
+            <div className="mt-4">
+              <ReadAloud text={[title, body, action].filter(Boolean).join(". ")} label="Read this tip to me" />
+            </div>
+          ) : null}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="mt-3 text-body font-semibold text-accent hover:underline"
+        >
+          Read more
+        </button>
+      )}
     </article>
   );
 }
