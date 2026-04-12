@@ -230,7 +230,7 @@ export function AIChatPanel() {
         }
       }
     },
-    [messages, streaming, userTurnCount],
+    [messages, streaming, userTurnCount, pickSuggestions],
   );
 
   const send = useCallback(() => {
@@ -325,6 +325,12 @@ export function AIChatPanel() {
             id="ai-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                send();
+              }
+            }}
             placeholder="Ask anything about AI..."
             rows={3}
             disabled={streaming || limitReached}
