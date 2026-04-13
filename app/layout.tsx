@@ -26,6 +26,11 @@ export const metadata: Metadata = {
   },
   description:
     "A free, patient technology helper for senior citizens. Learn to spot scams, understand AI, and use your phone with confidence.",
+  icons: {
+    icon: [{ url: "/icon-192.svg", type: "image/svg+xml" }],
+    shortcut: ["/icon-192.svg"],
+    apple: ["/icon-192.svg"],
+  },
   manifest: "/manifest.json",
   openGraph: {
     title: "TechBuddy — Your technology helper",

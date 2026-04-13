@@ -1,0 +1,177 @@
+{
+  "project": "TechBuddy",
+  "branchName": "ralph/techbuddy-genlink-2026",
+  "description": "TechBuddy for GenLink Hacks 2026 (MVP) — scam check, AI chat, practice, phone help, quick tips; seniors-first; demo on deployed HTTPS URL",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Scam check API returns structured JSON server-side only",
+      "description": "As a developer, I need POST /api/scam-check to call Z.ai on the server and return a typed scam result so the client never sees API keys.",
+      "acceptanceCriteria": [
+        "POST /api/scam-check accepts JSON body with non-empty message string",
+        "Response JSON includes verdict SCAM|SAFE|SUSPICIOUS, headline, explanation; may include warning_signs, action_steps, already_clicked arrays or strings per app types",
+        "Z_AI_API_KEY or ZAI_API_KEY is read only in server route or lib used by route, not in client components",
+        "Assistant text from model is normalized (e.g. empty content + reasoning_content handled) before JSON parse",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "AI chat API streams SSE from server",
+      "description": "As a developer, I need POST /api/ai-chat to stream assistant tokens so What Is AI can show answers progressively without exposing secrets.",
+      "acceptanceCriteria": [
+        "POST /api/ai-chat accepts messages array with user/assistant roles and string content",
+        "Response Content-Type is text/event-stream (or equivalent SSE) and emits JSON chunks the client already parses (e.g. data: {\"text\":\"...\"})",
+        "System prompt for explainer is applied server-side (ELI5, no fear-mongering, no medical/legal/financial advice)",
+        "On misconfiguration, returns 503 with JSON error, not a crash",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Practice API returns reply and phase",
+      "description": "As a developer, I need POST /api/practice to return roleplay or debrief phase with assistant text so Practice Mode can advance safely.",
+      "acceptanceCriteria": [
+        "POST /api/practice accepts scenario string, messages array, and phase roleplay|debrief",
+        "Response JSON has string reply and phase roleplay|debrief",
+        "Uses server-side model only; no API keys in client bundle",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Phone Help topics, steps, images, and walkthrough UI",
+      "description": "As an older adult, I want topic list and step-by-step screens with images so I can follow phone tasks on my device.",
+      "acceptanceCriteria": [
+        "Topics and steps are defined in a single module (e.g. lib/phone-help.ts) with predictable image paths /phone-help/{slug}-{step}.png",
+        "/phone-help lists topics; /phone-help/[topic] shows linear steps with next/back (or equivalent) usable at ~375px width",
+        "Each step shows instruction text and img with non-empty alt text",
+        "Placeholder images exist in public/phone-help for each referenced path or documented fallback",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Quick Tips one tip per day without AI",
+      "description": "As an older adult, I want one short tip per visit based on the date so I learn something without starting a chat.",
+      "acceptanceCriteria": [
+        "/quick-tips shows exactly one tip per load",
+        "Tip source is static or pre-authored list (no live AI call for MVP)",
+        "Tip typography uses large readable body text consistent with design tokens",
+        "Implementation documents whether tip is date-based or deterministic rotation",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Manifest and optional production extras",
+      "description": "As center staff, I want installable web app metadata and optional rate limiting/analytics so tablets and ops behave safely.",
+      "acceptanceCriteria": [
+        "App Router serves a web manifest (e.g. app/manifest.ts) with name TechBuddy, short_name, start_url /, display standalone, theme_color and background_color matching design tokens",
+        "Optional: Upstash rate limiting in Node API routes when UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are set; when unset, POST APIs still return 200 for valid requests",
+        "Optional: Plausible script in root layout only when NEXT_PUBLIC_PLAUSIBLE_DOMAIN is set",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Page shell, header, home menu, Privacy, For centers",
+      "description": "As an older adult, I want a clear home menu and trust pages linked from every screen so I can navigate and understand data use.",
+      "acceptanceCriteria": [
+        "PageShell wraps main app pages; SiteHeader includes Home link and Privacy and For centers when not in kiosk mode (?kiosk=1 hides non-Home header links per spec)",
+        "Home route lists five areas: Scam, Phone Help, What Is AI, Practice, Quick Tips with min-height tap targets >= 56px equivalent",
+        "/privacy states no accounts, messages go to server then AI for scam/AI chat/practice, no selling data, who to ask",
+        "/for-centers includes Print control and print-friendly layout; explains five areas",
+        "User can reach Home from major flows via header without relying only on browser back",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Scam checker page UI",
+      "description": "As an older adult, I want to paste suspicious text and see a clear verdict with first action highlighted and read-aloud.",
+      "acceptanceCriteria": [
+        "/scam-checker uses ScamCheckerForm to POST message to /api/scam-check and renders structured result",
+        "When action_steps exist, first step is shown in a prominent Do this first (or equivalent) region and not duplicated in the remaining list",
+        "Plain-language errors and Try again; user message not cleared on failure before retry where applicable",
+        "Read aloud control covers verdict headline, explanation, warnings, actions, already_clicked",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-009",
+      "title": "What Is AI chat UI",
+      "description": "As an older adult, I want starter questions and streaming replies with limits and friendly errors.",
+      "acceptanceCriteria": [
+        "/what-is-ai renders AIChatPanel with suggested starters and text input",
+        "Replies stream into chat bubbles with readable font sizes",
+        "Turn limit reached shows clear message; Start over resets state",
+        "On fetch/stream error, friendly copy plus Try again; restore last question in input when applicable",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-010",
+      "title": "Practice Mode list and session UI",
+      "description": "As an older adult, I want to pick a scenario, see that the other party is simulated, chat, end early, and read a debrief.",
+      "acceptanceCriteria": [
+        "/practice lists scenarios; /practice/[scenario] starts session with clear not a real person messaging",
+        "User can send messages; assistant replies via /api/practice; debrief phase shows debrief content",
+        "End Practice (or STOP PRACTICE) reaches debrief without dead-end",
+        "API errors show clear message and Try again on setup; roleplay can dismiss error and resend",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Deployment and PRD demo script on production URL",
+      "description": "As a hackathon team member, I want a stable HTTPS deployment and a passing demo script so judges can try the app.",
+      "acceptanceCriteria": [
+        "npm run build exits 0 with no errors",
+        "App deployed to stable HTTPS URL (e.g. Vercel); .env.example documents required vars; no secrets committed",
+        "On deployed URL: complete PRD section 9 demo script steps 1-8 (home, scam, AI, practice, phone help, quick tips, privacy, for-centers print preview)",
+        "Browser devtools or network tab shows no API keys in client-loaded JS",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": ""
+    }
+  ]
+}

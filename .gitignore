@@ -10,6 +10,10 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/blob-report
+/.playwright-mcp
 
 # next.js
 /.next/
@@ -20,7 +24,14 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
+*.swp
+*.swo
+
+# local artifacts
+/artifacts
+/proof-pack
 
 # debug
 npm-debug.log*
