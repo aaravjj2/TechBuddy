@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
+import { BackToTop } from "@/components/BackToTop";
 import { Footer } from "@/components/Footer";
 import { MobileNav } from "@/components/MobileNav";
 import { RouteTracker } from "@/components/RouteTracker";
@@ -65,6 +66,7 @@ export default function RootLayout({
         <RouteTracker />
         <Footer />
         <MobileNav />
+        <BackToTop />
       </body>
     </html>
   );
