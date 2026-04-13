@@ -67,7 +67,9 @@ test.describe("Phone Help image fallback (v4)", () => {
     await page.getByRole("button", { name: /next step/i }).click();
     await page.getByRole("button", { name: /next step/i }).click();
 
-    await expect(page.getByRole("button", { name: /next step/i })).toBeDisabled();
+    // Last step shows "Done" instead of "Next Step" (v14 change)
+    await expect(page.getByRole("button", { name: /next step/i })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /done/i })).toBeVisible();
     await expect(page.getByRole("button", { name: /previous/i })).toBeEnabled();
   });
 });

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("PWA manifest (v22)", () => {
   test("manifest.json is accessible", async ({ page }) => {
-    const response = await page.request.get("http://localhost:3013/manifest.json");
+    const response = await page.request.get("http://localhost:3015/manifest.json");
     expect(response.ok()).toBeTruthy();
 
     const manifest = await response.json();
@@ -13,17 +13,17 @@ test.describe("PWA manifest (v22)", () => {
   });
 
   test("manifest has icons defined", async ({ page }) => {
-    const response = await page.request.get("http://localhost:3013/manifest.json");
+    const response = await page.request.get("http://localhost:3015/manifest.json");
     const manifest = await response.json();
     expect(manifest.icons).toBeDefined();
     expect(manifest.icons.length).toBeGreaterThanOrEqual(2);
   });
 
   test("icon files are accessible", async ({ page }) => {
-    const icon192 = await page.request.get("http://localhost:3013/icon-192.svg");
+    const icon192 = await page.request.get("http://localhost:3015/icon-192.svg");
     expect(icon192.ok()).toBeTruthy();
 
-    const icon512 = await page.request.get("http://localhost:3013/icon-512.svg");
+    const icon512 = await page.request.get("http://localhost:3015/icon-512.svg");
     expect(icon512.ok()).toBeTruthy();
   });
 

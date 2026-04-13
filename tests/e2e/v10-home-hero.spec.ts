@@ -9,7 +9,7 @@ test.describe("Home page hero enhancement (v10)", () => {
     await expect(
       page.getByRole("heading", { name: "TechBuddy" }),
     ).toBeVisible();
-    await expect(page.getByText("Your technology helper")).toBeVisible();
+    await expect(page.getByText("Your technology helper").first()).toBeVisible();
   });
 
   test("descriptive tagline is visible", async ({ page }) => {
