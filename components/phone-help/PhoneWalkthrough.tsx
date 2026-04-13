@@ -27,7 +27,18 @@ export function PhoneWalkthrough({ topic }: { topic: PhoneHelpTopic }) {
             {topic.title} — Complete
           </div>
         </div>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        {/* Print view: all steps */}
+        <div className="print-only" aria-hidden>
+          <h1 className="font-display text-[36px] text-text-primary">{topic.title}</h1>
+          {topic.steps.map((step, i) => (
+            <div key={i} className="step-card mb-6 border-b border-border pb-6">
+              <h2 className="font-display text-[20px] text-text-primary">
+                {i + 1}. {step.instruction}
+              </h2>
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-3 sm:flex-row" data-print-hidden>
           <Link
             href="/phone-help"
             className="inline-flex min-h-[56px] items-center justify-center rounded-xl border border-border bg-surface px-6 text-body text-text-primary hover:bg-surface-hover"
@@ -51,26 +62,39 @@ export function PhoneWalkthrough({ topic }: { topic: PhoneHelpTopic }) {
   return (
     <div className="space-y-6">
       <h1 className="font-display text-[36px] text-text-primary">{topic.title}</h1>
-      <StepCard
-        currentStep={index + 1}
-        totalSteps={total}
-        instruction={step.instruction}
-        imageSrc={step.imageSrc}
-        imageAlt={step.imageAlt}
-        canGoPrevious={index > 0}
-        canGoNext={!isLast}
-        isLastStep={isLast}
-        onGoToStep={(i) => setIndex(i)}
-        onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
-        onNext={() => {
-          if (isLast) {
-            setCompleted(true);
-          } else {
-            setIndex((i) => Math.min(total - 1, i + 1));
-          }
-        }}
-      />
-      <p className="text-body">
+      {/* Interactive step view — hidden when printing */}
+      <div data-print-hidden>
+        <StepCard
+          currentStep={index + 1}
+          totalSteps={total}
+          instruction={step.instruction}
+          imageSrc={step.imageSrc}
+          imageAlt={step.imageAlt}
+          canGoPrevious={index > 0}
+          canGoNext={!isLast}
+          isLastStep={isLast}
+          onGoToStep={(i) => setIndex(i)}
+          onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
+          onNext={() => {
+            if (isLast) {
+              setCompleted(true);
+            } else {
+              setIndex((i) => Math.min(total - 1, i + 1));
+            }
+          }}
+        />
+      </div>
+      {/* Print view: all steps in sequence */}
+      <div className="print-only" aria-hidden>
+        {topic.steps.map((s, i) => (
+          <div key={i} className="step-card mb-6 border-b border-border pb-6">
+            <h2 className="font-display text-[20px] text-text-primary">
+              {i + 1}. {s.instruction}
+            </h2>
+          </div>
+        ))}
+      </div>
+      <p className="text-body" data-print-hidden>
         <Link
           href="/phone-help"
           className="text-accent underline min-h-[56px] inline-flex items-center"

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { PageShell } from "@/components/PageShell";
+import { PrintGuideButton } from "@/components/PrintGuideButton";
 import { PhoneWalkthrough } from "@/components/phone-help/PhoneWalkthrough";
 import { getTopicBySlug } from "@/lib/phone-help";
 
@@ -20,6 +21,9 @@ export default async function PhoneHelpTopicPage({ params }: Props) {
           { label: topic.title },
         ]}
       />
+      <div className="mb-4" data-print-hidden>
+        <PrintGuideButton />
+      </div>
       <PhoneWalkthrough topic={topic} />
     </PageShell>
   );
