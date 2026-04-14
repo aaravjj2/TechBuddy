@@ -2,11 +2,20 @@
   "name": "techbuddy",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "playwright test",
+    "test:e2e:multidevice": "MULTI_DEVICE=true playwright test tests/e2e/multi-device-smoke.spec.ts",
+    "test:a11y": "playwright test tests/e2e/accessibility-smoke.spec.ts",
+    "verify": "npm run lint && npm run typecheck && npm run build && npm run test:e2e && npm run test:e2e:multidevice",
+    "verify:quick": "npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.8",
@@ -17,6 +26,7 @@
     "vercel": "^51.1.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
     "@eslint/eslintrc": "^3",
     "@playwright/test": "^1.59.1",
     "@types/node": "^20",

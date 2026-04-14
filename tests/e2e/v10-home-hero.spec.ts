@@ -25,11 +25,19 @@ test.describe("Home page hero enhancement (v10)", () => {
   });
 
   test("all 5 navigation cards are present", async ({ page }) => {
-    await expect(page.getByText("Is This a Scam?")).toBeVisible();
-    await expect(page.getByText("Help With My Phone")).toBeVisible();
-    await expect(page.getByText("What Is AI?")).toBeVisible();
-    await expect(page.getByText("Practice Mode")).toBeVisible();
-    await expect(page.getByText("Today's Quick Tip")).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Is This a Scam?" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Help With My Phone" }),
+    ).toBeVisible();
+    await expect(page.getByRole("link", { name: "What Is AI?" })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Practice Mode" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Today's Quick Tip" }),
+    ).toBeVisible();
   });
 
   test("mobile viewport — hero and badges work at 375px", async ({
@@ -45,8 +53,10 @@ test.describe("Home page hero enhancement (v10)", () => {
     await expect(page.getByText("No login required")).toBeVisible();
     await expect(page.getByText("Built for seniors")).toBeVisible();
 
-    // Navigation cards should still be visible
-    await expect(page.getByText("Is This a Scam?")).toBeVisible();
+    // Navigation cards should still be visible (use link role — checklist duplicates labels in text)
+    await expect(
+      page.getByRole("link", { name: "Is This a Scam?" }),
+    ).toBeVisible();
   });
 
   test("regression — skip link and bottom nav work on home", async ({

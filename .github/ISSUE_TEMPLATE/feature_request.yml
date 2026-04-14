@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest an improvement for TechBuddy
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What user problem are we addressing?
+      placeholder: Describe the senior/caregiver pain point.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe your preferred solution.
+    validations:
+      required: true
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Product principles check
+      options:
+        - label: Keeps UI simple and friendly
+        - label: Improves multi-device usability
+        - label: Supports accessibility and readability
+        - label: Can be tested and shipped safely
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any alternatives or trade-offs?
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      description: How will we know this is done?

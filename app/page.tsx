@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContinueCard } from "@/components/ContinueCard";
+import { FirstVisitChecklist } from "@/components/FirstVisitChecklist";
 import { NavButton } from "@/components/NavButton";
 import { PageShell } from "@/components/PageShell";
 
@@ -41,6 +42,10 @@ export default function Home() {
           </span>
         </div>
       </header>
+
+      <div className="mb-6">
+        <FirstVisitChecklist />
+      </div>
 
       <div className="mb-6">
         <ContinueCard />

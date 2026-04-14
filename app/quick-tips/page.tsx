@@ -37,6 +37,7 @@ export default function QuickTipsPage() {
           action={todayTip.action}
           category={todayTip.category}
           highlighted
+          headingLevel={2}
         />
       </section>
 

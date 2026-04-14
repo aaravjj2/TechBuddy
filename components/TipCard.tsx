@@ -11,10 +11,19 @@ export type TipCardProps = {
   action?: string;
   highlighted?: boolean;
   category?: TipCategory;
+  headingLevel?: 2 | 3;
 };
 
-export function TipCard({ title, body, action, highlighted = false, category }: TipCardProps) {
+export function TipCard({
+  title,
+  body,
+  action,
+  highlighted = false,
+  category,
+  headingLevel = 3,
+}: TipCardProps) {
   const [expanded, setExpanded] = useState(highlighted);
+  const HeadingTag = headingLevel === 2 ? "h2" : "h3";
 
   return (
     <article
@@ -37,9 +46,9 @@ export function TipCard({ title, body, action, highlighted = false, category }: 
               {category}
             </span>
           ) : null}
-          <h3 className="font-display text-[22px] leading-snug text-text-primary">
+          <HeadingTag className="font-display text-[22px] leading-snug text-text-primary">
             {title}
-          </h3>
+          </HeadingTag>
         </div>
       </div>
 

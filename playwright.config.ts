@@ -4,19 +4,34 @@ export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 1 : undefined,
-  reporter: "list",
+  reporter: [["list"], ["html", { outputFolder: "playwright-report", open: "never" }]],
   use: {
     baseURL: "http://localhost:3015",
     trace: "on-first-retry",
   },
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-  ],
+  projects: process.env.MULTI_DEVICE === "true"
+    ? [
+        {
+          name: "desktop-chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+        {
+          name: "tablet-chromium",
+          use: { ...devices["iPad Pro 11"], browserName: "chromium" },
+        },
+        {
+          name: "mobile-chromium",
+          use: { ...devices["Pixel 7"], browserName: "chromium" },
+        },
+      ]
+    : [
+        {
+          name: "chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+      ],
   webServer: {
     command: "npm run dev -- -p 3015",
     url: "http://localhost:3015",
