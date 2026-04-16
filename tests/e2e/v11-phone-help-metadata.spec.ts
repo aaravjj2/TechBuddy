@@ -12,9 +12,9 @@ test.describe("Phone help topic metadata (v11)", () => {
     await expect(page.getByText("4 steps").first()).toBeVisible();
     await expect(page.getByText("3 steps").first()).toBeVisible();
 
-    // Verify all 8 topic cards contain a step count badge pattern
+    // Verify all 11 topic cards contain a step count badge pattern
     const stepBadges = page.locator("a[href^='/phone-help/']");
-    await expect(stepBadges).toHaveCount(8);
+    await expect(stepBadges).toHaveCount(11);
   });
 
   test("each topic card shows estimated time badge", async ({ page }) => {
@@ -24,7 +24,7 @@ test.describe("Phone help topic metadata (v11)", () => {
     await expect(page.getByText("~2 min").first()).toBeVisible();
   });
 
-  test("all 8 topics are listed with correct titles", async ({ page }) => {
+  test("all 11 topics are listed with correct titles", async ({ page }) => {
     await expect(page.getByText("How to make a video call")).toBeVisible();
     await expect(page.getByText("How to share a photo")).toBeVisible();
     await expect(page.getByText("How to update your apps")).toBeVisible();
@@ -33,6 +33,9 @@ test.describe("Phone help topic metadata (v11)", () => {
     await expect(page.getByText("How to charge your phone")).toBeVisible();
     await expect(page.getByText("How to mute or unmute")).toBeVisible();
     await expect(page.getByText("How to take a screenshot")).toBeVisible();
+    await expect(page.getByText("How to create a strong password")).toBeVisible();
+    await expect(page.getByText("How to install a new app")).toBeVisible();
+    await expect(page.getByText("What is two-factor authentication")).toBeVisible();
   });
 
   test("mobile viewport — metadata badges visible at 375px", async ({

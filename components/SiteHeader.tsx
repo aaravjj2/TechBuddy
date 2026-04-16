@@ -30,6 +30,18 @@ export function SiteHeader() {
             >
               For centers
             </Link>
+            <Link
+              href="/progress"
+              className="inline-flex min-h-[56px] items-center justify-center rounded-xl border border-border bg-surface px-4 text-body text-text-primary hover:bg-surface-hover"
+            >
+              My progress
+            </Link>
+            <Link
+              href="/emergency"
+              className="inline-flex min-h-[56px] items-center justify-center rounded-xl border-2 border-danger bg-surface px-4 text-body font-semibold text-danger hover:bg-danger hover:text-white"
+            >
+              Get help now
+            </Link>
           </>
         ) : null}
       </div>

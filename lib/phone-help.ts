@@ -229,6 +229,84 @@ export const PHONE_HELP_TOPICS: PhoneHelpTopic[] = [
       },
     ]),
   },
+  {
+    slug: "strong-passwords",
+    title: "How to create a strong password",
+    steps: buildSteps("strong-passwords", [
+      {
+        instruction:
+          "Think of a short sentence only you would know, like 'My first dog was named Biscuit in 1995.'",
+        imageAlt: "Illustration of thinking of a personal sentence for a password.",
+      },
+      {
+        instruction:
+          "Take the first letter of each word and keep the numbers: 'MfdwnBi1995' — that is a strong password.",
+        imageAlt: "Illustration showing how to turn a sentence into a password.",
+      },
+      {
+        instruction:
+          "Make it even stronger by adding a symbol: 'MfdwnBi1995!' — now it has uppercase, lowercase, numbers, and a symbol.",
+        imageAlt: "Illustration of adding a symbol to make the password stronger.",
+      },
+      {
+        instruction:
+          "Write it down on paper and keep it somewhere safe at home — not on a sticky note near your computer.",
+        imageAlt: "Illustration of storing written passwords in a safe place.",
+      },
+    ]),
+  },
+  {
+    slug: "install-app",
+    title: "How to install a new app",
+    steps: buildSteps("install-app", [
+      {
+        instruction:
+          "On iPhone, open the App Store. On Android, open the Play Store. These are the safe places to get apps.",
+        imageAlt: "Illustration of the App Store or Play Store icon.",
+      },
+      {
+        instruction:
+          "Tap the search bar at the top and type the name of the app you want, like 'WhatsApp' or 'Zoom.'",
+        imageAlt: "Illustration of typing an app name in the search bar.",
+      },
+      {
+        instruction:
+          "Find the correct app — look for the one with the most reviews and the official developer name. Tap 'Get' or 'Install.'",
+        imageAlt: "Illustration highlighting the Install button and developer name.",
+      },
+      {
+        instruction:
+          "Wait for the download to finish, then tap 'Open' or find the new app on your home screen.",
+        imageAlt: "Illustration of a completed download with the Open button.",
+      },
+    ]),
+  },
+  {
+    slug: "two-factor",
+    title: "What is two-factor authentication and how to turn it on",
+    steps: buildSteps("two-factor", [
+      {
+        instruction:
+          "Two-factor authentication (also called 2FA) means that after your password, the website sends a code to your phone to make sure it is really you.",
+        imageAlt: "Illustration showing a phone receiving a code after a password is entered.",
+      },
+      {
+        instruction:
+          "Open the website or app where you want to turn it on (like your email or bank) and look for 'Settings' then 'Security' or 'Privacy.'",
+        imageAlt: "Illustration of navigating to Security settings in an app.",
+      },
+      {
+        instruction:
+          "Look for 'Two-factor authentication' or 'Login verification' and tap 'Turn on.' You will usually need to enter your phone number.",
+        imageAlt: "Illustration of the toggle to turn on two-factor authentication.",
+      },
+      {
+        instruction:
+          "The next time you log in, you will get a text with a code. Enter that code and you are in! This makes your account much harder to break into.",
+        imageAlt: "Illustration of entering a texted code on a login screen.",
+      },
+    ]),
+  },
 ];
 
 export function getTopicBySlug(slug: string): PhoneHelpTopic | undefined {

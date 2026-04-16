@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ContinueCard } from "@/components/ContinueCard";
 import { FirstVisitChecklist } from "@/components/FirstVisitChecklist";
+import { BadgeSummary } from "@/components/BadgeSummary";
 import { NavButton } from "@/components/NavButton";
 import { PageShell } from "@/components/PageShell";
 
@@ -51,6 +52,10 @@ export default function Home() {
         <ContinueCard />
       </div>
 
+      <div className="mb-6">
+        <BadgeSummary />
+      </div>
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <NavButton
           href="/scam-checker"
@@ -78,6 +83,17 @@ export default function Home() {
             emoji="💡"
             label="Today's Quick Tip"
           />
+        </div>
+        <div className="md:col-span-2">
+          <a
+            href="/emergency"
+            className="flex min-h-[56px] w-full items-center justify-center gap-3 rounded-2xl border-2 border-danger bg-surface px-6 py-4 text-[22px] font-display text-danger shadow-sm transition-colors hover:bg-danger hover:text-white"
+          >
+            <span className="text-2xl" aria-hidden>
+              🆘
+            </span>
+            I&apos;ve Been Scammed — Get Help Now
+          </a>
         </div>
       </div>
     </PageShell>

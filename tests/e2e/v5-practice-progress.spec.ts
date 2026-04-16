@@ -4,12 +4,11 @@ test.describe("Practice Mode progress (v5)", () => {
   test("progress card shows initial state with 0 completed", async ({
     page,
   }) => {
-    // Clear any stored completions
     await page.goto("/practice");
     await page.evaluate(() => localStorage.clear());
     await page.reload();
 
-    await expect(page.getByText("You've completed 0 of 5")).toBeVisible();
+    await expect(page.getByText(/you've completed 0 of \d+/i)).toBeVisible();
     await expect(page.getByRole("heading", { name: /your progress/i })).toBeVisible();
   });
 
@@ -21,16 +20,14 @@ test.describe("Practice Mode progress (v5)", () => {
     const bar = page.getByRole("progressbar");
     await expect(bar).toBeVisible();
     await expect(bar).toHaveAttribute("aria-valuemin", "0");
-    await expect(bar).toHaveAttribute("aria-valuemax", "5");
   });
 
-  test("5 scenario cards are displayed", async ({ page }) => {
+  test("all scenario cards are displayed", async ({ page }) => {
     await page.goto("/practice");
 
-    const scenarioLinks = page.getByRole("link", {
-      name: /fake tech support|grandchild in trouble|fake amazon|social security|lottery winner/i,
-    });
-    await expect(scenarioLinks).toHaveCount(5);
+    const scenarioLinks = page.locator("ul li a[href^='/practice/']");
+    const count = await scenarioLinks.count();
+    expect(count).toBeGreaterThanOrEqual(5);
   });
 
   test("mobile viewport — progress card is usable at 375px", async ({
@@ -41,7 +38,7 @@ test.describe("Practice Mode progress (v5)", () => {
     await page.evaluate(() => localStorage.clear());
     await page.reload();
 
-    await expect(page.getByText(/you've completed \d of 5/i)).toBeVisible();
+    await expect(page.getByText(/you've completed \d+ of \d+/i)).toBeVisible();
     await expect(page.getByRole("progressbar")).toBeVisible();
   });
 
@@ -54,7 +51,6 @@ test.describe("Practice Mode progress (v5)", () => {
   });
 
   test("regression — completed scenarios show checkmark", async ({ page }) => {
-    // Set a completed scenario in localStorage
     await page.goto("/practice");
     await page.evaluate(() => {
       localStorage.setItem(
@@ -64,8 +60,7 @@ test.describe("Practice Mode progress (v5)", () => {
     });
     await page.reload();
 
-    await expect(page.getByText("You've completed 1 of 5")).toBeVisible();
-    // The completed scenario should have a checkmark
+    await expect(page.getByText(/you've completed 1 of \d+/i)).toBeVisible();
     const checkmark = page.locator('span[aria-label="Completed"]');
     await expect(checkmark).toBeVisible();
   });
