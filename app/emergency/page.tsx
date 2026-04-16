@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
+import { PageReadAloudClient } from "@/components/PageReadAloudClient";
 
 export const metadata: Metadata = {
   title: "I've Been Scammed — Get Help Now",
@@ -91,6 +92,9 @@ export default function EmergencyPage() {
               your fault.
             </p>
           </div>
+        </div>
+        <div className="mt-4">
+          <PageReadAloudClient label="Read these steps to me" />
         </div>
       </header>
 

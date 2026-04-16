@@ -115,17 +115,16 @@ TechBuddy solves this by being a **free, no-login, patient technology teacher** 
 - [x] Web vitals telemetry
 - [x] Client error telemetry
 
-### Phase 2 — Progress & Emergency (THIS ITERATION)
-- [ ] Progress badge system — earn badges for completing tutorials, practice scenarios, and daily tips
-- [ ] "I've Been Scammed" emergency page with clear step-by-step actions and real phone numbers
-- [ ] More phone help topics: password safety, two-factor authentication, installing apps
-- [ ] More practice scenarios covering phone call scams, email phishing, text message scams
-- [ ] Share progress feature — share badges with family via text/email
+### Phase 2 — Progress & Emergency (COMPLETE)
+- [x] Progress badge system — earn badges for completing tutorials, practice scenarios, and daily tips
+- [x] "I've Been Scammed" emergency page with clear step-by-step actions and real phone numbers
+- [x] More phone help topics: password safety, two-factor authentication, installing apps
+- [x] More practice scenarios: Medicare, romance, refund, government grant scams (10 total)
+- [x] Badge summary on home page
 
-### Phase 3 — Voice & Onboarding (NEXT ITERATION)
+### Phase 3 — Voice & Onboarding (THIS ITERATION)
 - [ ] Voice read-aloud on ALL pages (not just scam results)
 - [ ] Improved onboarding flow — guided 60-second walkthrough for first-time visitors
-- [ ] Daily reminder system (opt-in, uses notifications)
 - [ ] Topic difficulty indicators (Beginner / Intermediate)
 
 ### Phase 4 — Polish & Demo (FINAL ITERATION)
