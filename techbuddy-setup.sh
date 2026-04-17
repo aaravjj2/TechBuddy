@@ -1,4 +1,6 @@
-#!/usr/bin/env bash
+cd ~/Aarav/TechBuddy
+chmod +x techbuddy-setup.sh
+./techbuddy-setup.sh#!/usr/bin/env bash
 # ============================================================
 #  ONE-SHOT TECHBUDDY SETUP — GenLink Hacks
 #  Run from inside ~/Aarav/TechBuddy (or wherever you cloned it)

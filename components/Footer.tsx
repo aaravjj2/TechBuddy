@@ -55,7 +55,36 @@ export function Footer() {
           <HighContrastToggle />
           <FontSizeControls />
         </div>
-        <p className="mt-8 text-sm text-text-secondary">
+        <nav
+          aria-label="Additional pages"
+          className="mt-8 flex flex-wrap gap-x-2 gap-y-2 text-base"
+        >
+          <a
+            href="/artifacts"
+            className="inline-flex min-h-[44px] items-center rounded-md px-3 py-2 font-semibold text-accent underline underline-offset-4 hover:text-accent-hover focus-visible:outline-none focus-visible:ring-focus focus-visible:ring-accent"
+          >
+            Artifacts gallery (360 briefs)
+          </a>
+          <a
+            href="/accessibility"
+            className="inline-flex min-h-[44px] items-center rounded-md px-3 py-2 font-semibold text-accent underline underline-offset-4 hover:text-accent-hover focus-visible:outline-none focus-visible:ring-focus focus-visible:ring-accent"
+          >
+            Accessibility statement
+          </a>
+          <a
+            href="/privacy"
+            className="inline-flex min-h-[44px] items-center rounded-md px-3 py-2 font-semibold text-accent underline underline-offset-4 hover:text-accent-hover focus-visible:outline-none focus-visible:ring-focus focus-visible:ring-accent"
+          >
+            Privacy
+          </a>
+          <a
+            href="/sign-in"
+            className="inline-flex min-h-[44px] items-center rounded-md px-3 py-2 font-semibold text-accent underline underline-offset-4 hover:text-accent-hover focus-visible:outline-none focus-visible:ring-focus focus-visible:ring-accent"
+          >
+            Instructor sign-in
+          </a>
+        </nav>
+        <p className="mt-6 text-sm text-text-secondary">
           TechBuddy is a free educational tool — not a replacement for official
           help. When in doubt, always call a trusted family member or your local
           police non-emergency line.

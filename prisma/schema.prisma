@@ -1,0 +1,173 @@
+// TechBuddy — Prisma schema
+// Uses SQLite for local dev (simple, zero-dependency). Swap DATABASE_URL to
+// postgresql://... and provider to "postgresql" to run against Postgres.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: SQLite does not support Prisma enums, so Role is stored as a string.
+// Allowed values: "SENIOR" | "INSTRUCTOR" | "ADMIN". Validated in application code.
+
+model User {
+  id             String    @id @default(cuid())
+  email          String?   @unique
+  name           String?
+  role           String    @default("SENIOR")
+  passwordHash   String?
+  centerId       String?
+  center         CommunityCenter? @relation("CenterLearners", fields: [centerId], references: [id])
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  accounts        Account[]
+  sessions        Session[]
+  scamChecks      ScamCheck[]
+  phoneSessions   PhoneHelpSession[]
+  practiceRuns    PracticeSession[]
+  metrics         LearnerMetric[]
+  coordinatedCenter CommunityCenter? @relation("CoordinatorCenter")
+}
+
+model CommunityCenter {
+  id            String   @id @default(cuid())
+  name          String
+  city          String
+  state         String
+  coordinatorId String?  @unique
+  coordinator   User?    @relation("CoordinatorCenter", fields: [coordinatorId], references: [id])
+  learners      User[]   @relation("CenterLearners")
+  createdAt     DateTime @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model ScamCheck {
+  id              String   @id @default(cuid())
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  inputText       String
+  inputType       String   @default("other")
+  verdict         String
+  confidenceScore Int
+  reasoning       String
+  redFlags        String // JSON array as text
+  actionSteps     String // JSON array as text
+  createdAt       DateTime @default(now())
+}
+
+model PhoneHelpSession {
+  id          String   @id @default(cuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  topic       String
+  steps       String // JSON array as text
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model PracticeSession {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  scenario  String
+  messages  String // JSON
+  score     Int      @default(0)
+  feedback  String?
+  createdAt DateTime @default(now())
+}
+
+model LearnerMetric {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month            String // YYYY-MM
+  taskSuccessRate  Float
+  sessionCount     Int
+  completionRate   Float
+  createdAt        DateTime @default(now())
+
+  @@unique([userId, month])
+}
+
+model MilestoneRecord {
+  id             String   @id @default(cuid())
+  month          String // YYYY-MM
+  domain         String
+  completionPct  Float
+  gateTarget     Float
+  passed         Boolean
+  notes          String?
+  createdAt      DateTime @default(now())
+}
+
+model ArtifactPage {
+  id          String   @id @default(cuid())
+  pageNumber  Int      @unique
+  year        Int
+  monthInYear Int
+  globalMonth Int
+  quarter     Int
+  domain      String
+  title       String
+  primaryGoal String
+  outcomes    String // JSON array
+  metrics     String // JSON object
+  risks       String // JSON array
+  dod         String
+  createdAt   DateTime @default(now())
+}
+
+model ApiCallLog {
+  id         String   @id @default(cuid())
+  requestId  String
+  route      String
+  method     String
+  statusCode Int
+  durationMs Int
+  userId     String?
+  createdAt  DateTime @default(now())
+
+  @@index([route])
+  @@index([createdAt])
+}

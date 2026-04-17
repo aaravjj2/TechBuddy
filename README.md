@@ -1,101 +1,130 @@
 # TechBuddy
 
-> Your patient, always-available technology helper for senior citizens.
+> A calm, patient technology helper for senior citizens — spot scams, learn AI, and master the phone, with zero jargon and no sign-up required.
 
-Built for GenLink Hacks 2026 — designed to deploy at GenLink senior centers in Austin, TX.
-
-## What It Does
-
-- **Scam Detector** — Paste suspicious messages; get a clear safe, scam, or suspicious verdict with plain-language next steps.
-- **Help With My Phone** — Step-by-step walkthroughs for common smartphone tasks (video calls, photos, WiFi, screenshots, and more).
-- **What Is AI?** — A calm chat that explains artificial intelligence without jargon.
-- **Practice Mode** — Safe roleplay against common scam scripts, with an encouraging debrief afterward.
-- **Quick Tips** — One short tip per day about safety, devices, and AI.
-
-## Why We Built It
-
-Seniors deserve technology help that feels respectful and calm—not rushed or condescending. TechBuddy matches GenLink’s focus on scams, smartphones, and AI literacy in one simple web app that works on tablets and desktops without installing anything.
+TechBuddy pairs a senior-first web experience with an instructor and admin console so community centers can measure impact across the full 36-month program, backed by 360 searchable planning briefs.
 
 ## Tech Stack
 
-Next.js 15 · TypeScript · Tailwind CSS · Z.ai (OpenAI-compatible chat API) · Vercel
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js 15 (App Router) |
+| UI | React 19, TypeScript 5, Tailwind CSS 3 |
+| Database | Prisma 6 + SQLite (dev) / PostgreSQL (prod) |
+| Auth | NextAuth v5 (Credentials provider) |
+| AI | Anthropic `claude-sonnet-4-5` primary, Z.AI (`glm-4.6`) fallback |
+| Testing | Playwright + `@axe-core/playwright` |
+| CI/CD | GitHub Actions → Vercel |
 
-## Product Quality Targets
-
-- **Multi-device support** — mobile, tablet, and desktop layouts must all be usable and readable.
-- **Simple and friendly UX** — large tap targets, plain language, and calm interaction patterns.
-- **Appealing interface** — clear visual hierarchy, accessible contrast, and consistent components.
-- **Ship readiness** — repeatable CI checks, documented setup, and production deployment path.
-
-## Running Locally
+## Local Development
 
 ```bash
-git clone https://github.com/aaravjj2/TechBuddy.git
-cd TechBuddy
-npm install
-cp .env.example .env.local
-# Add Z_AI_API_KEY (or ZAI_API_KEY) to .env.local.
-# If requests fail, set Z_AI_BASE_URL to the coding endpoint from .env.example.
+# 1. Copy env (Prisma reads .env, Next.js reads .env.local)
+cp .env.example .env.local && cp .env.example .env
+
+# 2. Install with legacy peer deps (React 19 + NextAuth beta quirks)
+npm install --legacy-peer-deps
+
+# 3. Push schema + seed 360 artifact pages, test users, and sample metrics
+npm run db:push && npm run db:seed
+
+# 4. Start the dev server (http://localhost:3000)
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Playwright targets port `3015` — see `playwright.config.ts`. Tests start the dev server automatically with `npm run dev -- -p 3015`.
+
+## Running Tests
+
+```bash
+# Full E2E suite (Chromium)
+npm run test:e2e
+
+# Accessibility-focused smoke only
+npm run test:a11y
+
+# One spec file
+npx playwright test tests/e2e/v1-api.spec.ts
+npx playwright test tests/e2e/artifacts-gallery.spec.ts
+npx playwright test tests/e2e/instructor-auth.spec.ts
+
+# Multi-device (desktop + tablet + mobile)
+npm run test:e2e:multidevice
+```
+
+All v1 API tests, artifact gallery tests, instructor tests, and home additions tests assume the database is seeded (`npm run db:seed`) and pick up the running dev server automatically.
 
 ## Environment Variables
 
-Required:
+| Variable | Required? | Default | Used by |
+| --- | --- | --- | --- |
+| `DATABASE_URL` | Yes | `file:./dev.db` | Prisma (SQLite locally, Postgres in prod) |
+| `NEXTAUTH_SECRET` | Yes | — | NextAuth JWT signing |
+| `NEXTAUTH_URL` | Yes in prod | `http://localhost:3000` | NextAuth callback URLs |
+| `ANTHROPIC_API_KEY` | Recommended | — | Primary AI provider (scam-check, practice, AI explainer) |
+| `ANTHROPIC_MODEL` | No | `claude-sonnet-4-5` | Pinned Anthropic model |
+| `Z_AI_API_KEY` | Optional | — | Fallback AI provider |
+| `Z_AI_BASE_URL` | No | `https://api.z.ai/api/coding/paas/v4/` | Z.AI endpoint override |
 
-- `Z_AI_API_KEY` (or `ZAI_API_KEY`)
+If both AI keys are missing, `/api/v1/health` returns `data.ai === "degraded"` and the UI gracefully degrades to a rule-based fallback.
 
-Optional:
+## Architecture
 
-- `Z_AI_BASE_URL`
-- `Z_AI_MODEL`
-- `UPSTASH_REDIS_REST_URL`
-- `UPSTASH_REDIS_REST_TOKEN`
-- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
-- `NEXT_PUBLIC_ENABLE_CLIENT_TELEMETRY`
-- `NEXT_PUBLIC_ENABLE_WEB_VITALS`
+```
+Browser ──> Next.js App Router ──> API v1 Routes ──> Prisma ──> SQLite / PostgreSQL
+                                         │
+                                         └──> Anthropic (claude-sonnet-4-5) ↔ Z.AI fallback
+```
 
-See `.env.example` for descriptions.
+Every v1 response is wrapped in a uniform envelope:
 
-## Scripts
+```jsonc
+{ "data": { /* ... */ }, "meta": { "requestId": "...", "version": "v1", "timestamp": "..." } }
+// or on error
+{ "error": { "code": "VALIDATION_ERROR", "message": "...", "requestId": "..." },
+  "meta": { ... } }
+```
 
-- `npm run dev` — start local development server
-- `npm run lint` — run lint checks
-- `npm run build` — production build
-- `npx playwright test` — run end-to-end tests
-- `npm run test:a11y` — run accessibility smoke tests
+Headers `x-request-id` and `x-api-version: v1` are present on every v1 response.
 
-## Testing and CI
+## Key Routes
 
-- Full local gate: `npm run verify` (lint, typecheck, build, E2E, multi-device smoke)
-- Faster check: `npm run verify:quick` (lint, typecheck, build only)
-- GitHub Actions runs the same quality steps plus multi-device smoke; uploads `playwright-report` and `test-results` on every run.
+- Public: `/`, `/scam-checker`, `/phone-help`, `/practice`, `/quick-tips`, `/emergency`, `/artifacts` ([360 monthly briefs](/artifacts)), `/accessibility`, `/sign-in`
+- Instructor (auth required, role `INSTRUCTOR` or `ADMIN`): `/instructor/dashboard`, `/instructor/learners`, `/instructor/impact`, `/instructor/center`
+- Admin: `/admin/impact`, `/admin/research`, `/admin/partners`, `/admin/governance`
+- API v1: `/api/v1/health`, `/api/v1/artifacts`, `/api/v1/artifacts/[id]`, `/api/v1/telemetry` (instructor-only), `/api/v1/scam-check` (10/hr/IP), `/api/v1/analytics/{overview,learners,impact,milestone}`
 
-Accessibility:
+## Seeded Test Accounts
 
-- Axe scans run as part of the main E2E suite; `npm run test:a11y` runs them alone.
+| Role | Email | Password |
+| --- | --- | --- |
+| Instructor | `instructor@test.com` | `TestPass123` |
+| Senior (learner) | `senior1@test.com` | `SeniorPass123` |
 
-## Screenshots
+Seniors do not need to sign in to use any public feature — accounts only exist to demo instructor analytics.
 
-- [Home](public/screenshots/home.png)
-- [Scam checker](public/screenshots/scam-checker.png)
-- [What Is AI?](public/screenshots/what-is-ai.png)
+## Contributing
 
-## Submission checklist
+Before pushing a change:
 
-See [SUBMISSION.md](SUBMISSION.md) for Devpost, Vercel, demo video links, and final checks.
+```bash
+npm run lint
+npm run typecheck
+npm run verify:quick   # lint + typecheck + build
+```
 
-## Governance and Support
+Husky is configured to run `lint-staged` on every commit so formatting and lint fixes stay automatic. See [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+## Accessibility
+
+TechBuddy exists for users who are most often excluded by "modern" product design. Every page is built to WCAG 2.1 AA — large targets, high contrast, keyboard-first navigation, and calm plain-language copy. Our CI blocks any merge that introduces a critical or serious axe-core violation, and the [accessibility statement](./app/accessibility/page.tsx) publishes how to contact a real human if something is still hard to use.
+
+## Governance and Docs
 
 - Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
 - Security policy: [SECURITY.md](SECURITY.md)
 - QA matrix: [docs/QA-MATRIX.md](docs/QA-MATRIX.md)
 - Release checklist: [docs/RELEASE-CHECKLIST.md](docs/RELEASE-CHECKLIST.md)
-- Buyer pack template: [docs/BUYER-PACK.md](docs/BUYER-PACK.md)
 - Operations runbook: [docs/OPERATIONS-RUNBOOK.md](docs/OPERATIONS-RUNBOOK.md)
 - Architecture summary: [docs/ARCHITECTURE-SUMMARY.md](docs/ARCHITECTURE-SUMMARY.md)
-- Metrics baseline: [docs/METRICS-BASELINE.md](docs/METRICS-BASELINE.md)
-- Performance budget: [docs/PERFORMANCE-BUDGET.md](docs/PERFORMANCE-BUDGET.md)
