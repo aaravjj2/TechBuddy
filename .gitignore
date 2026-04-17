@@ -28,10 +28,22 @@ Thumbs.db
 *.pem
 *.swp
 *.swo
+*:Zone.Identifier
 
-# local artifacts
+# editor and tooling
+.vscode/
+.idea/
+.eslintcache
+
+# local artifacts and logs
 /artifacts
 /proof-pack
+/loop-logs
+DEPLOY_URL.txt
+
+# script states
+/ralph/.last-branch
+/ralph/progress.txt
 
 # debug
 npm-debug.log*
@@ -51,4 +63,3 @@ yarn-error.log*
 # Prisma
 prisma/dev.db
 prisma/dev.db-journal
-.env
