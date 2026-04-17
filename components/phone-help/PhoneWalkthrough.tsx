@@ -77,6 +77,14 @@ export function PhoneWalkthrough({ topic }: { topic: PhoneHelpTopic }) {
           onPrevious={() => setIndex((i) => Math.max(0, i - 1))}
           onNext={() => {
             if (isLast) {
+              void fetch("/api/v1/phone-help/complete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topicSlug: topic.slug }),
+                keepalive: true,
+              }).catch(() => {
+                /* recording is best-effort */
+              });
               setCompleted(true);
             } else {
               setIndex((i) => Math.min(total - 1, i + 1));

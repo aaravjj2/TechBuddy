@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
+import { AppProviders } from "@/components/AppProviders";
 import { BackToTop } from "@/components/BackToTop";
 import { ClientErrorTelemetry } from "@/components/ClientErrorTelemetry";
 import { Footer } from "@/components/Footer";
@@ -81,7 +82,9 @@ export default function RootLayout({
             `,
           }}
         />
-        {children}
+        <AppProviders>
+          {children}
+        </AppProviders>
         <ClientErrorTelemetry />
         <WebVitalsTelemetry />
         <RouteTracker />

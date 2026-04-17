@@ -1,22 +1,9 @@
 import { rateLimitResponse } from "@/lib/rate-limit";
-import {
-  getZaiModel,
-  zaiChatCompletionStream,
-} from "@/lib/zai";
-import { AI_EXPLAINER_SYSTEM } from "@/lib/prompts";
+import { createAiExplainerSseStream } from "@/lib/ai-chat-sse";
 import type { ChatMessage } from "@/lib/types";
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
-}
-
-function toApiMessages(
-  messages: ChatMessage[],
-): { role: string; content: string }[] {
-  return messages.map((m) => ({
-    role: m.role,
-    content: m.content,
-  }));
 }
 
 export async function POST(req: Request) {
@@ -48,14 +35,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const upstream = await zaiChatCompletionStream({
-      model: getZaiModel(),
-      max_tokens: 900,
-      messages: [
-        { role: "system", content: AI_EXPLAINER_SYSTEM },
-        ...toApiMessages(messages),
-      ],
-    });
+    const upstream = await createAiExplainerSseStream(messages);
 
     const wrapped = new ReadableStream({
       async start(controller) {

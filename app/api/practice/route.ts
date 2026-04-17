@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { rateLimitResponse } from "@/lib/rate-limit";
-import {
-  extractAssistantText,
-  getZaiModel,
-  zaiChatCompletion,
-} from "@/lib/zai";
+import { runAi } from "@/lib/ai-client";
 import { practiceSystemPrompt } from "@/lib/prompts";
 import type { ChatMessage, PracticePhase } from "@/lib/types";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { newRequestId } from "@/lib/telemetry";
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
@@ -69,12 +68,15 @@ export async function POST(req: Request) {
       messages.length === 0
         ? [
             {
-              role: "user",
+              role: "user" as const,
               content:
                 "The senior has joined this safe practice session. You are playing the scammer. Speak first with your opening message (2–4 sentences). Stay in character. Do not debrief yet.",
             },
           ]
-        : toApiMessages(messages);
+        : toApiMessages(messages).map((m) => ({
+            role: m.role as "user" | "assistant",
+            content: m.content,
+          }));
 
     const userTurns = messages.filter((m) => m.role === "user").length;
     const lastUser = messages.filter((m) => m.role === "user").at(-1)?.content;
@@ -89,17 +91,24 @@ export async function POST(req: Request) {
       augmentedSystem = `${system}\n\nThe senior typed STOP PRACTICE. Switch to DEBRIEF mode now using the required debrief format.`;
     }
 
-    const raw = await zaiChatCompletion({
-      model: getZaiModel(),
-      max_tokens: 1200,
-      messages: [
-        { role: "system", content: augmentedSystem },
-        ...apiMessages,
-      ],
+    const requestId = newRequestId();
+    const ai = await runAi({
+      system: augmentedSystem,
+      messages: apiMessages,
+      maxTokens: 1200,
+      temperature: 0.45,
+      route: "/api/practice",
+      requestId,
     });
 
-    const reply = extractAssistantText(raw.choices?.[0]?.message);
-    if (!reply.trim()) {
+    let reply: string;
+    if (!ai.ok) {
+      reply = ai.message;
+    } else {
+      reply = ai.text.trim();
+    }
+
+    if (!reply) {
       return NextResponse.json(
         { error: "Unexpected model response" },
         { status: 502 },
@@ -111,18 +120,30 @@ export async function POST(req: Request) {
       userTurns,
     });
 
+    if (phaseOut === "debrief") {
+      const session = await auth();
+      const userId = session?.user?.id ?? null;
+      prisma.practiceSession
+        .create({
+          data: {
+            userId,
+            scenario: scenario.trim(),
+            messages: JSON.stringify(messages),
+            score: 0,
+            feedback: reply.slice(0, 4000),
+          },
+        })
+        .catch(() => {
+          /* best-effort */
+        });
+    }
+
     return NextResponse.json({
       reply,
       phase: phaseOut,
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Server error";
-    if (msg === "Missing Z_AI_API_KEY_or_ZAI_API_KEY") {
-      return NextResponse.json(
-        { error: "Server not configured" },
-        { status: 503 },
-      );
-    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

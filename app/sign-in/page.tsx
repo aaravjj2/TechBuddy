@@ -3,6 +3,7 @@ import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { signIn, auth } from "@/lib/auth";
 import { Card, CardTitle, CardDescription } from "@/components/ui/Card";
+import { AlertBanner } from "@/components/ui/AlertBanner";
 
 export const dynamic = "force-dynamic";
 
@@ -66,11 +67,10 @@ export default async function SignInPage({
           </header>
 
           {prefillError ? (
-            <div
-              role="alert"
-              className="mt-6 rounded-senior border-l-4 border-scam-500 bg-scam-50 p-4 text-senior-base text-scam-700"
-            >
-              {prefillError}
+            <div className="mt-6">
+              <AlertBanner tone="scam" title="Sign-in did not work" assertive>
+                {prefillError}
+              </AlertBanner>
             </div>
           ) : null}
 

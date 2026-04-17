@@ -3,8 +3,11 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ReadAloud } from "@/components/ReadAloud";
-import { Spinner } from "@/components/Spinner";
 import { ScamVerdict } from "@/components/ScamVerdict";
+import { AlertBanner } from "@/components/ui/AlertBanner";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { SeniorInput } from "@/components/ui/SeniorInput";
+import { TooltipLabel } from "@/components/ui/TooltipLabel";
 import type { ScamCheckResult } from "@/lib/types";
 
 const PLACEHOLDER = `Example: "Your Amazon account has been suspended. Click here to verify: amz-login.net"`;
@@ -125,33 +128,34 @@ export function ScamCheckerForm() {
   return (
     <div className="space-y-8">
       <div>
-        <label htmlFor="scam-input" className="sr-only">
-          Suspicious message
-        </label>
-        <textarea
+        <SeniorInput
           id="scam-input"
+          label="Suspicious message"
+          labelSrOnly
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={PLACEHOLDER}
           rows={6}
-          className="min-h-[150px] w-full rounded-xl border border-border bg-surface px-4 py-3 text-body text-text-primary shadow-inner placeholder:text-text-secondary"
+          className="min-h-[150px] text-body"
         />
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          <button
-            type="button"
-            onClick={() => void submit()}
-            disabled={loading || !message.trim()}
-            className="flex h-[60px] min-w-[200px] flex-1 items-center justify-center rounded-xl bg-accent text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading ? (
-              <>
-                <Spinner label="Checking message" />
-                <span className="ml-2">Checking…</span>
-              </>
-            ) : (
-              "Check This Message"
-            )}
-          </button>
+          <TooltipLabel content="We check your words to give a plain-English answer. Nothing is shared publicly.">
+            <button
+              type="button"
+              onClick={() => void submit()}
+              disabled={loading || !message.trim()}
+              className="flex h-[60px] min-w-[200px] flex-1 items-center justify-center rounded-xl bg-accent text-lg font-semibold text-white hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <LoadingSpinner label="Checking message" />
+                  <span className="ml-2">Checking…</span>
+                </>
+              ) : (
+                "Check This Message"
+              )}
+            </button>
+          </TooltipLabel>
           {error ? (
             <button
               type="button"
@@ -167,9 +171,11 @@ export function ScamCheckerForm() {
           ) : null}
         </div>
         {error ? (
-          <p className="mt-4 text-body text-danger" role="alert">
-            {error}
-          </p>
+          <div className="mt-4">
+            <AlertBanner tone="scam" title="Something went wrong" assertive>
+              {error}
+            </AlertBanner>
+          </div>
         ) : null}
       </div>
 

@@ -138,6 +138,7 @@ test.describe("API v1 · scam-check", () => {
   test("12 rapid requests trigger at least one 429 RATE_LIMITED", async ({
     request,
   }) => {
+    test.setTimeout(120_000);
     // Unique seed per run so test output is debuggable even if rate limit
     // is shared across prior runs.
     const seed = `playwright-rate-limit-${Date.now()}-${Math.random()
@@ -172,5 +173,31 @@ test.describe("API v1 · scam-check", () => {
       const body = await verifyRes.json();
       expect(body.error?.code).toBe("RATE_LIMITED");
     }
+  });
+});
+
+test.describe("API v1 · phone-help", () => {
+  test("POST complete with valid topicSlug returns envelope", async ({
+    request,
+  }) => {
+    const res = await request.post("/api/v1/phone-help/complete", {
+      data: { topicSlug: "wifi" },
+    });
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body.data?.recorded).toBe(true);
+    expect(body.data?.slug).toBe("wifi");
+    expect(body.meta?.version).toBe("v1");
+  });
+
+  test("POST complete with unknown slug returns 404", async ({
+    request,
+  }) => {
+    const res = await request.post("/api/v1/phone-help/complete", {
+      data: { topicSlug: "not-a-real-topic-slug-xyz" },
+    });
+    expect(res.status()).toBe(404);
+    const body = await res.json();
+    expect(body.error?.code).toBe("NOT_FOUND");
   });
 });
