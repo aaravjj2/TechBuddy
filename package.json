@@ -47,7 +47,7 @@
     "prisma": "^6.19.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hook-form": "^7.72.1",
+    "react-hook-form": "^7.73.1",
     "recharts": "^3.8.1",
     "tailwind-merge": "^3.5.0",
     "vercel": "^51.1.0",
